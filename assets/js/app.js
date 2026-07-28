@@ -102,30 +102,31 @@
   }
  
   function renderFavoritesList() {
-    const list = document.getElementById("favorites-list");
-    const badge = document.getElementById("my-clubs-badge");
-    if (!list || !badge) return;
+      const list = document.getElementById("favorites-list");
+      const badge = document.getElementById("my-clubs-badge");
+      if (!list || !badge) return;
 
-    list.innerHTML = "";
-    let count = 0;
+      list.innerHTML = "";
+      let count = 0;
 
-    for (const [clubId, data] of Object.entries(favoritedClubs)) {
-      count++;
-      const li = document.createElement("li");
-      li.className = "fav-item";
-      li.setAttribute("data-club-id", clubId);
-      li.title = "Click to open · Right-click to unfavorite";
-      li.onclick = () => switchPage(data.pageId);
-      li.oncontextmenu = (e) => {
-        e.preventDefault();
-        toggleFavorite({ stopPropagation() {} }, clubId, data.title, data.pageId);
-      };
-      li.innerHTML = `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> ${data.title}`;
-      list.appendChild(li);
+      for (const [clubId, data] of Object.entries(favoritedClubs)) {
+        count++;
+        const li = document.createElement("li");
+        li.className = "fav-item";
+        li.setAttribute("data-club-id", clubId);
+        li.title = "Click to open · Right-click to unfavorite";
+        li.onclick = () => switchPage(data.pageId);
+        li.oncontextmenu = (e) => {
+          e.preventDefault();
+          toggleFavorite({ stopPropagation() {} }, clubId, data.title, data.pageId);
+        };
+        li.innerHTML = `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> ${data.title}`;
+        list.appendChild(li);
+      }
+
+      badge.innerText = String(count);
+      renderGlobalCalendar();
     }
-
-    badge.innerText = String(count);
-  }
  
   // --- NEW CLUB PAGE SCRIPTS ---
   function switchTab(clubId, tabName, btnElement) {
@@ -463,13 +464,6 @@
     state.month = m;
     renderClubCalendar(clubId);
   }
-
-  const originalRenderFavorites = renderFavoritesList;
-  function patchedRenderFavorites() {
-    originalRenderFavorites();
-    renderGlobalCalendar();
-  }
-  renderFavoritesList = patchedRenderFavorites;
 
   // ------- North Star (matching) -------
   const northStarState = { queue: [], index: 0, matches: [] };

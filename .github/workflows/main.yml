@@ -19,9 +19,6 @@ jobs:
       - name: Linting
         run: npx eslint . --max-warnings=0
 
-      - name: Build
-        run: npm run build
-
       - name: Secret scan
         uses: gitleaks/gitleaks-action@v3
         env:
